@@ -9,7 +9,7 @@
             <h3 class="card-title mb-3">Stocks</h3>
             <form action="">
               <div class="my-3">
-                <select class="form-select" v-model="selectedProduct" id="">
+                <select class="form-select mb-3" v-model="selectedProduct" id="">
                   <option value="">Selected Product</option>
                   <option v-for="product in products" :value="product.id" :key="product.id">{{product.name}}</option>
                 </select>
@@ -23,15 +23,18 @@
 <!--                  </select>-->
 <!--                </div>-->
                 <div v-if="selectedProduct >0">
-                  <div class="form-check" v-for="unit in selectedProductDetail.unit">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                    <label class="form-check-label" for="flexRadioDefault1">
-                      {{ unit.name }} [ {{unit.price}}ကျပ် ]
-                    </label>
-                  </div>
+                  <select class="form-select mb-3" v-model="selectedUnit" id="">
+                    <option v-for="unit in selectedProductDetail.unit" :value="unit.id">{{unit.name}}</option>
+                  </select>
                 </div>
+                <div v-else>
+                  <select class="form-select mb-3" id="">
+                    <option value="">Select Unit</option>
+                  </select>
+                </div>
+
                 <div class="mb-3">
-                  <input type="text" class="form-control" v-model="inputQuatity">
+                  <input type="text" placeholder="quantity" class="form-control" v-model="inputQuatity">
                 </div>
               </div>
 
@@ -50,7 +53,7 @@ export default {
     return {
       selectedProduct:"",
       selectedUnit:"",
-      inputQuatity:quatity,
+      inputQuatity:"",
       products: [
         {
           id:1,
