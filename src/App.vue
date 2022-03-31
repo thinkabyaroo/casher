@@ -13,14 +13,25 @@
                   <option value="">Selected Product</option>
                   <option v-for="product in products" :value="product.id" :key="product.id">{{product.name}}</option>
                 </select>
-                <div>
-                  <select class="form-select" v-model="selectedUnit">
-                    <option v-if="selectedProduct === 0">Select Unit</option>
-                    <option v-else="selectedProduct >0" v-for="unit in selectedProductDetail.unit" :key="unit.id" >
-                      {{unit.name}}
-                    </option>
+<!--                <div>-->
+<!--                  <select class="form-select" v-model="selectedUnit">-->
+<!--                    <option v-if="selectedProduct === 0">Select Unit</option>-->
+<!--                    <option v-else="selectedProduct >0" v-for="unit in selectedProductDetail.unit" :key="unit.id" >-->
+<!--                      {{unit.name}}-->
+<!--                    </option>-->
 
-                  </select>
+<!--                  </select>-->
+<!--                </div>-->
+                <div v-if="selectedProduct >0">
+                  <div class="form-check" v-for="unit in selectedProductDetail.unit">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                    <label class="form-check-label" for="flexRadioDefault1">
+                      {{ unit.name }} [ {{unit.price}}ကျပ် ]
+                    </label>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <input type="text" class="form-control" v-model="inputQuatity">
                 </div>
               </div>
 
@@ -39,6 +50,7 @@ export default {
     return {
       selectedProduct:"",
       selectedUnit:"",
+      inputQuatity:quatity,
       products: [
         {
           id:1,
@@ -125,9 +137,9 @@ export default {
   },
   computed: {
     selectedProductDetail() {
-      if (this.selectedProduct === ""){
-        return {}
-      }
+      // if (this.selectedProduct === ""){
+      //   return {}
+      // }
       return this.products.find(el=>el.id === this.selectedProduct)
     }
   },
