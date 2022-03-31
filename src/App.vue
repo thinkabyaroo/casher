@@ -6,7 +6,7 @@
       <div class="col-lg-4">
         <div class="card">
           <div class="card-body">
-            <h3 class="card-title mb-3">ကုန်ပစ်စည်း</h3>
+            <h3 class="card-title mb-3">ကုန်ပစ္စည်း</h3>
             <form action="" @submit.prevent="saveRecord">
               <div class="my-3">
                 <select class="form-select mb-3" v-model="selectedProduct" id="">
@@ -28,7 +28,7 @@
                   <select class="form-select mb-3" v-model="selectedUnit" id="">
                     <option value="">Select Unit</option>
                     <option v-for="unit in selectedProduct>0 && selectedProductDetail.unit" :value="unit.id">
-                      {{unit.name}} - [{{unit.price}}ကကျပ်
+                      {{unit.name}} - [{{unit.price}}ကျပ် ]
                     </option>
                   </select>
                 </div>
@@ -39,7 +39,7 @@
 <!--                </div>-->
 
                 <div class="mb-3">
-                  <input type="number" placeholder="quantity" class="form-control" v-model="inputQuatity">
+                  <input type="number" placeholder="quantity" class="form-control" v-model="inputQuantity">
                 </div>
               </div>
               <div class="" @click="saveRecord">
@@ -47,7 +47,43 @@
               </div>
 
             </form>
-            {{records}}
+<!--            {{records}}-->
+
+            <table class="table table-bordered mt-3">
+              <thead>
+              <tr>
+                <th>#</th>
+                <th>ပစ္စည်း</th>
+                <th>Unit / Price</th>
+                <th>Quantity</th>
+                <th>Cost</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td v-if="records.length === 0" colspan="5" class="text-center">No record</td>
+              </tr>
+              <tr class="animate__animated animate__fadeInDown" v-for="record in records" :key="record.id">
+                <td>
+                  <span class="show-in-print">{{ record.id }}</span>
+                  <i @click="del(record.id)" class="fa-solid fa-trash-alt text-danger hide-in-print"></i>
+                </td>
+                <td>{{ record.product.name }}</td>
+                <td class="text-end">{{ record.unit.price }} ကျပ်  /{{record.unit.name}}</td>
+                <td class="text-end">{{ record.quantity }}</td>
+                <td class="text-end">{{ record.cost }}</td>
+              </tr>
+              </tbody>
+              <tfoot>
+              <tr v-if="records.length > 0">
+                <td colspan="4">Total</td>
+                <td class="text-end">{{ records.reduce((pv,cv)=>pv+cv.cost,0) }}</td>
+              </tr>
+              </tfoot>
+            </table>
+
+
+
           </div>
         </div>
       </div>
@@ -62,7 +98,8 @@ export default {
     return {
       selectedProduct:"",
       selectedUnit:"",
-      inputQuatity:null,
+      inputQuantity:null,
+      recordStart:1,
       products: [
         {
           id:1,
@@ -97,7 +134,7 @@ export default {
           ]
         },
         {
-          id:1,
+          id:3,
           name:"orange",
           unit:[
             {
@@ -113,7 +150,7 @@ export default {
           ]
         },
         {
-          id:1,
+          id:4,
           name:"banana",
           unit:[
             {
@@ -161,16 +198,18 @@ export default {
     saveRecord() {
       let currentUnit=this.selectedProductDetail.unit.find(el=>el.id === this.selectedUnit)
       let record={
+        id:this.recordStart,
         product:this.selectedProductDetail,
         unit:currentUnit,
-        quantity:this.inputQuatity,
-        cost:currentUnit.price * this.inputQuatity
+        quantity:this.inputQuantity,
+        cost:currentUnit.price * this.inputQuantity
       };
       //this.records.push(record);
       this.records=[...this.records,record]
       console.log(record);
       
-      this.selectedProduct=this.selectedUnit=this.inputQuatity=""
+      this.selectedProduct=this.selectedUnit=this.inputQuantity=""
+      this.recordStart++
 
       // console.log(this.selectedProductDetail,this.selectedProduct,this.selectedUnit,this.inputQuatity)
     }
