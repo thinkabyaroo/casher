@@ -6,12 +6,14 @@
       <div class="col-lg-4">
         <div class="card">
           <div class="card-body">
-            <h3 class="card-title mb-3">Stocks</h3>
-            <form action="">
+            <h3 class="card-title mb-3">ကုန်ပစ်စည်း</h3>
+            <form action="" @submit.prevent="saveRecord">
               <div class="my-3">
                 <select class="form-select mb-3" v-model="selectedProduct" id="">
                   <option value="">Selected Product</option>
-                  <option v-for="product in products" :value="product.id" :key="product.id">{{product.name}}</option>
+                  <option v-for="product in products" :value="product.id" :key="product.id">
+                    {{product.name}}
+                  </option>
                 </select>
 <!--                <div>-->
 <!--                  <select class="form-select" v-model="selectedUnit">-->
@@ -24,21 +26,28 @@
 <!--                </div>-->
                 <div v-if="selectedProduct >0">
                   <select class="form-select mb-3" v-model="selectedUnit" id="">
-                    <option v-for="unit in selectedProductDetail.unit" :value="unit.id">{{unit.name}}</option>
-                  </select>
-                </div>
-                <div v-else>
-                  <select class="form-select mb-3" id="">
                     <option value="">Select Unit</option>
+                    <option v-for="unit in selectedProduct>0 && selectedProductDetail.unit" :value="unit.id">
+                      {{unit.name}} - [{{unit.price}}ကကျပ်
+                    </option>
                   </select>
                 </div>
+<!--                <div v-else>-->
+<!--                  <select class="form-select mb-3" id="">-->
+<!--                    <option value="">Select Unit</option>-->
+<!--                  </select>-->
+<!--                </div>-->
 
                 <div class="mb-3">
-                  <input type="text" placeholder="quantity" class="form-control" v-model="inputQuatity">
+                  <input type="number" placeholder="quantity" class="form-control" v-model="inputQuatity">
                 </div>
+              </div>
+              <div class="" @click="saveRecord">
+                <button class="btn btn-primary">Add</button>
               </div>
 
             </form>
+            {{records}}
           </div>
         </div>
       </div>
@@ -53,7 +62,7 @@ export default {
     return {
       selectedProduct:"",
       selectedUnit:"",
-      inputQuatity:"",
+      inputQuatity:null,
       products: [
         {
           id:1,
@@ -135,15 +144,35 @@ export default {
             }
           ]
         },
-      ]
+      ],
+      records:[],
     }
   },
   computed: {
     selectedProductDetail() {
-      // if (this.selectedProduct === ""){
-      //   return {}
-      // }
+      if (this.selectedProduct === null){
+        return {}
+      }
       return this.products.find(el=>el.id === this.selectedProduct)
+    }
+  },
+  methods: {
+
+    saveRecord() {
+      let currentUnit=this.selectedProductDetail.unit.find(el=>el.id === this.selectedUnit)
+      let record={
+        product:this.selectedProductDetail,
+        unit:currentUnit,
+        quantity:this.inputQuatity,
+        cost:currentUnit.price * this.inputQuatity
+      };
+      //this.records.push(record);
+      this.records=[...this.records,record]
+      console.log(record);
+      
+      this.selectedProduct=this.selectedUnit=this.inputQuatity=""
+
+      // console.log(this.selectedProductDetail,this.selectedProduct,this.selectedUnit,this.inputQuatity)
     }
   },
 }
